@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS USERS (
   username VARCHAR(20),
   salt VARCHAR,
   password VARCHAR,
-  firstname VARCHAR(20),
-  lastname VARCHAR(20)
+  firstname VARCHAR(40),
+  lastname VARCHAR(40)
 );
 
 CREATE TABLE IF NOT EXISTS NOTES (
