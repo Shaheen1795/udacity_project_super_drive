@@ -18,8 +18,6 @@ public class CredentialService {
         this.credentialMapper = credentialMapper;
     }
 
-
-
     protected String getSaltString() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
@@ -35,15 +33,33 @@ public class CredentialService {
 
    public int createCredential(@ModelAttribute("credentialData") CredentialData credentialData){
         String key = getSaltString();
-        String encodedKey = encryptionService.encryptValue(key, credentialData.getPassword());
+        String encodedKey =encryptData(key,credentialData.getPassword());
         credentialData.setPassword(encodedKey);
         credentialData.setKey(key);
         return credentialMapper.insertCredentials(credentialData);
+    }
+
+    public String encryptData(String key, String password){
+        return  encryptionService.encryptValue(key, password);
+    }
+
+     public CredentialData getCredential(Integer credentialId){
+        CredentialData credentialData = credentialMapper.getCredential(credentialId);
+        return  new CredentialData(credentialData.getCredentialId(),credentialData.getUrl(),
+                credentialData.getUsername(),credentialData.getKey(), decryptData(credentialData.getPassword(),credentialData.getKey()),credentialData.getUserId());
+     }
+
+     public boolean updateCredential(Integer credentialId, CredentialData credentialData) {
+         credentialData.setPassword(encryptData(credentialData.getPassword(), credentialData.getKey()));
+         return credentialMapper.updateCredentials(credentialId, credentialData);
+     }
+
+     public int deleteCredential(Integer credentialId){
+        return credentialMapper.deleteCredentials(credentialId);
      }
 
    public List<CredentialData> getCredentialList(Integer userId){
         return credentialMapper.getCredentialList(userId);
-
    }
     public String decryptData(String data,String key){
         return encryptionService.decryptValue(data,key);

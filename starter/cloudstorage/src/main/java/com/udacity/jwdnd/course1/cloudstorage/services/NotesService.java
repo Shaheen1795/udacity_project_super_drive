@@ -10,24 +10,28 @@ import java.util.List;
 @Service
 public class NotesService {
     private NotesMapper notesMapper ;
+    private SignUpService signUpService ;
 
-    public NotesService(NotesMapper notesMapper) {
+    public NotesService(NotesMapper notesMapper, SignUpService signUpService) {
         this.notesMapper = notesMapper;
-
+        this.signUpService = signUpService ;
     }
-
     @ModelAttribute("notes")
    public List<Notes> getNotes(Integer userId){
-        return notesMapper.getNotes(userId);
+        return notesMapper.getListOfNotes(userId);
    }
-
-
+   public Notes getNote(Integer noteId){
+        return notesMapper.getNotes(noteId);
+   }
+   public Boolean editNotes(Integer noteId, Notes notes){
+        return  notesMapper.updateNotes(notes,noteId);
+   }
     public int createNotes(Notes notes){
-
+        notes.setUserId(signUpService.getId());
         return notesMapper.insertNotes(notes);
     }
 
-   public void delete(Notes notes){
-        notesMapper.deleteNotes(notes.getNoteId());
+   public void deleteNote(Integer noteId){
+        notesMapper.deleteNotes(noteId);
    }
 }

@@ -9,15 +9,18 @@ import java.util.List;
 public interface NotesMapper {
 
     @Select("SELECT * FROM NOTES WHERE userId = #{userId}")
-    List<Notes> getNotes(Integer userId);
+    List<Notes> getListOfNotes(Integer userId);
 
     @Delete("SELECT noteId NOTES WHERE noteId=#{noteId}" )
     int deleteNotes(Integer noteId);
 
-    @Update("")
-    boolean updateNotes(Notes notes);
+    @Update("UPDATE NOTES SET noteTile=#{noteTitle}, noteDescription=#{noteDescription} WHERE noteId=#{noteId}")
+    boolean updateNotes(Notes notes,Integer noteId);
 
     @Insert("INSERT INTO NOTES(noteTitle, noteDescription, userId) VALUES (#{noteTitle},#{noteDescription},#{userId})")
     @Options(useGeneratedKeys = true, keyProperty = "noteId")
     int insertNotes(Notes notes);
+
+    @Select("SELECT * FROM NOTES WHERE noteId = #{noteId}")
+    Notes getNotes(Integer noteId);
 }
